@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+  <title>Mongo File Uploads</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #333;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .hero-head {
+      background-color: #444;
+      padding: 1rem;
+    }
+    .hero-body {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .title {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+    .file-label {
+      display: inline-block;
+      background: #555;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .file-input {
+      display: none;
+    }
+    .button {
+      background: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .button.is-danger {
+      background: #dc3545;
+    }
+    .image {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-head">
+    <nav>
+      <div style="display: flex; justify-content: center;">
+        <div>
+          <a style="color: white; text-decoration: none; font-size: 1.5rem;" href="#"><strong>File Uploads</strong></a>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="hero-body">
+    <div>
+      <h1 class="title">Mongo File Uploads</h1>
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input class="file-input" type="file" name="file" id="file" required>
+          <span>Choose a file…</span>
+        </label><br>
+        <input class="button" type="submit" value="Submit">
+      </form>
+      <hr style="border: 1px solid white; margin: 20px 0;">
+      <% if (files) { %>
+        <% files.forEach(function(file) { %>
+          <div style="margin: 10px 0;">
+            <% if (file.isImage) { %>
+              <figure class="image">
+                <img src="image/<%= file.filename %>" alt="Image" style="max-width: 300px;">
+                <figcaption><%= file.filename %></figcaption>
+              </figure>
+            <% } else { %>
+              <p><%= file.filename %></p>
+            <% } %>
+            <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
+              <button class="button is-danger">
+                <span class="icon is-small"><i class="fas fa-trash-alt"></i></span>
+                <span>Delete</span>
+              </button>
+            </form>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No files to show</p>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
